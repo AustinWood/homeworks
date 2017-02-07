@@ -2,19 +2,24 @@ class LRUCache
   CACHE_SIZE = 4
 
   def initialize
-
+    @hash_map = Hash.new(nil)
+    @linked_list = LinkedList.new
   end
 
   def count
-    # returns number of elements currently in cache
+    @hash_map.count
   end
 
   def add(el)
-    # adds element to cache according to LRU principle
+    @hash_map
   end
 
   def show
-    # shows the items in the cache, with the LRU item first
+    current_link = @linked_list.head
+    until current_link.next = nil
+      current_link = current_link.next
+      p current_link.value
+    end
   end
 
   private
@@ -23,18 +28,25 @@ class LRUCache
 end
 
 class LinkedList
+  attr_reader :head, :tail, :value
+
   def initialize
     @head = MyLink.new
     @tail = MyLink.new
     @head.next = @tail
     @tail.prev = head
   end
+
+  def add(el)
+    new_link = MyLink.new(el, @tail)
+  end
 end
 
 class MyLink
-  def initialize
-    @next = nil
+  def initialize(val = nil, next_link = nil)
+    @next = next_link
     @prev = nil
+    @val = val
   end
 
   def next(link)
