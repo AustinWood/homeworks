@@ -48,4 +48,13 @@ class Play
         id = ?
     SQL
   end
+
+  def self.find_by_title(title)
+    raise "The title must be a string"  unless title.is_a?(String)
+    PlayDBConnection.instance.execute(<<-SQL,  title)
+      SELECT *
+      FROM plays
+      WHERE title = ?
+    SQL
+  end
 end
