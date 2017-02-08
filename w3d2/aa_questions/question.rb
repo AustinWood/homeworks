@@ -1,0 +1,89 @@
+require 'sqlite3'
+require_relative 'db_connection'
+
+class Question
+  attr_accessor :title, :body, :author_id
+
+  def self.all
+    data = DBConnection.instance.execute("SELECT * FROM questions")
+    data.map { |datum| Question.new(datum) }
+  end
+
+  def initialize(options)
+    @id = options['id']
+    @title = options['title']
+    @body = options['body']
+    @author_id = options['author_id']
+  end
+
+  def create
+    raise "#{self} already in database" if @id
+    DBConnection.instance.execute(<<-SQL, @title, @body, @author_id)
+      INSERT INTO
+        questions (title, body, author_id)
+      VALUES
+        (?, ?, ?)
+    SQL
+    @id = DBConnection.instance.last_insert_row_id
+  end
+
+  def update
+    raise "#{self} not in database" unless @id
+    DBConnection.instance.execute(<<-SQL, @title, @body, @author_id, @id)
+      UPDATE
+        questions
+      SET
+        title = ?, body = ?, author_id = ?
+      WHERE
+        id = ?
+    SQL
+  end
+
+  def self.find_by_id(id)
+    raise "ID must be an integer" unless id.is_a?(Integer)
+    arr = DBConnection.instance.execute(<<-SQL, id)
+      SELECT *
+      FROM questions
+      WHERE id = ?
+    SQL
+    Question.new(arr.first)
+  end
+
+  def self.find_by_author_id(author_id)
+    raise "ID must be an integer" unless author_id.is_a?(Integer)
+    arr = DBConnection.instance.execute(<<-SQL, author_id)
+      SELECT *
+      FROM questions
+      WHERE author_id = ?
+    SQL
+    arr.map { |q| Question.new(q) }
+  end
+
+  def author
+    User.find_by_id(author_id)
+  end
+
+  def replies
+    Reply.find_by_question_id(@id)
+  end
+
+  def followers
+    QuestionFollow.followers_for_question_id(@id)
+  end
+
+  def self.most_followed(n)
+    QuestionFollow.most_followed_questions(n)
+  end
+
+  def likers
+    QuestionLike.likers_for_question_id(@id)
+  end
+
+  def num_likes
+    QuestionLike.num_likes_for_question_id(@id)
+  end
+
+  def self.most_liked(n)
+    QuestionLike.most_liked_questions(n)
+  end
+end
