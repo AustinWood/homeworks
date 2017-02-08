@@ -43,7 +43,7 @@ class Play
       UPDATE
         plays
       SET
-        title = ?, year = ?, playwright_id = ?
+      title = ?, year = ?, playwright_id = ?
       WHERE
         id = ?
     SQL
