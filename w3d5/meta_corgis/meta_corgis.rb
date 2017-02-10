@@ -110,7 +110,11 @@ class MetaCorgiSnacks
   end
 
   def method_missing(name, *args)
-    # Your code goes here...
+    method_name = name.to_s
+    method_arr = method_name.split("_")
+    if ["info", "tastiness"].include?(method_arr.last)
+      @data[box_id][method_arr[1]][method_arr.last]
+    end
   end
 
 
