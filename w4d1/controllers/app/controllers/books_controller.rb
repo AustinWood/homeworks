@@ -12,7 +12,8 @@ class BooksController < ApplicationController
   end
 
   def destroy
-    # your code here
+    Book.find(params["id"]).destroy
+    redirect_to "index"
   end
 
   private
