@@ -1,9 +1,20 @@
-let d = new Date();
-global.setInterval(() => console.log(d), 2000);
+class Clock {
+  constructor() {
+    let d = new Date();
+    this.h = d.getHours();
+    this.m = d.getMinutes();
+    this.s = d.getSeconds();
+  }
 
-function printTime() {
-  let h = d.getHours();
-  let m = d.getMinutes();
-  let s = d.getSeconds();
-  console.log(`${h}:${m}:${s}`);
+  printTime() {
+    console.log(`${this.h}:${this.m}:${this.s}`);
+  }
+
+  _tick() {
+    this.s += 1;
+    this.printTime();
+  }
 }
+
+const clock = new Clock();
+global.setInterval(() => clock._tick(), 1000);
