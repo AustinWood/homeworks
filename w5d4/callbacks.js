@@ -37,7 +37,7 @@ function addNumbers(sum, numsLeft, completionCallback) {
   }
 }
 
-// addNumbers(0, 3, function (sum) {
-//   console.log(`The final sum is: ${sum}`);
-//   reader.close();
-// });
+addNumbers(0, 3, function (sum) {
+  console.log(`The final sum is: ${sum}`);
+  reader.close();
+});
